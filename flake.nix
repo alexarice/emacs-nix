@@ -1,11 +1,14 @@
 {
-  description = "A very basic flake";
+  description = "Nix config for emacs";
+
+  inputs = {
+    # emacs-overlay.url = "github:nix-community/emacs-overlay";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+  };
 
   outputs = { self, nixpkgs }: {
-
-    packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
-
-    packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
-
+    nixosModules = {
+      emacs-nix = import ./module.nix;
+    };
   };
 }
