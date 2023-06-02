@@ -15,8 +15,9 @@ let
 
     modules = [
       ./modules/base.nix
-      ./modules/settings.nix
+      ./modules/hydra.nix
       ./modules/package.nix
+      ./modules/settings.nix
     ];
   };
 in
