@@ -6,7 +6,10 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
   };
 
-  outputs = { self, nixpkgs }: {
+  outputs = {
+    self,
+    nixpkgs,
+  }: {
     nixosModules = {
       emacs-nix = import ./module.nix;
     };

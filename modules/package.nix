@@ -1,9 +1,15 @@
-{ lib, epkgs, config, ... }:
-
-with lib;
-
-let
-  packageOpts = { name, config, ... }: {
+{
+  lib,
+  epkgs,
+  config,
+  ...
+}:
+with lib; let
+  packageOpts = {
+    name,
+    config,
+    ...
+  }: {
     options = {
       enable = mkEnableOption name;
 
@@ -18,7 +24,7 @@ let
 
       external-packages = mkOption {
         type = with types; listOf package;
-        default = [ ];
+        default = [];
         example = literalExpression "[ pkgs.silver-searcher ]";
         description = ''
           Packages that should be added to nixmacs' path.
@@ -75,7 +81,7 @@ let
 
       commands = mkOption {
         type = with types; either (listOf str) str;
-        default = [ ];
+        default = [];
         description = ''
           List of strings to be passed to <option>:commands</option> keyword of use-package.
         '';
@@ -83,7 +89,7 @@ let
 
       bind = mkOption {
         type = types.bindType;
-        default = { };
+        default = {};
         #TODO better description
         description = ''
           Attribute set of bindings to be passed to <option>:bind</option> keyword of use-package.
@@ -92,7 +98,7 @@ let
 
       bind-keymap = mkOption {
         type = types.bindType;
-        default = { };
+        default = {};
         description = ''
           List of bindings to be passed to <option>:bind-keymap</option> keyword of use-package.
         '';
@@ -140,7 +146,7 @@ let
 
       custom = mkOption {
         type = types.varBindType;
-        default = { };
+        default = {};
         description = ''
           Attribute set to be passed to the <option>:custom</option> keyword of use-package.
         '';
@@ -148,7 +154,7 @@ let
 
       custom-face = mkOption {
         type = types.varBindType;
-        default = { };
+        default = {};
         description = ''
           Attribute set to be passed to the <option>:custom-face</option> keyword of use-package.
         '';
@@ -188,7 +194,7 @@ let
 
       after = mkOption {
         type = with types; either (listOf str) str;
-        default = [ ];
+        default = [];
         description = ''
           String to be passed to the <option>:after</option> keyword of use-package.
         '';
@@ -228,7 +234,7 @@ let
 
       chords = mkOption {
         type = types.bindType;
-        default = { };
+        default = {};
         description = ''
           Attribute set to be passed to the <option>:chords</option> keyword of use-package.
         '';
@@ -239,54 +245,148 @@ let
     };
   };
 
-
   removeNonEmptyLines = s: builtins.concatStringsSep "\n" (builtins.filter (l: l != "") (splitString "\n" s));
 
-  concatLines = s: if builtins.isList s then builtins.concatStringsSep "\n" s else s;
+  concatLines = s:
+    if builtins.isList s
+    then builtins.concatStringsSep "\n" s
+    else s;
 
-  packageToConfig = p: removeNonEmptyLines ''
-    (use-package ${p.name}
-    ${if p.defer then ":defer t" else ""}
-    ${if p.init != "" then ":init\n${p.init}" else ""}
-    ${if p.config != "" then ":config\n${p.config}" else ""}
-    ${if p.commands != [] then ":commands (${builtins.concatStringsSep " " p.commands})" else ""}
-    ${if p.bind != {} then ":bind\n${printBinding (p.bind)}" else ""}
-    ${if p.bind-keymap != {} then ":bind-keymap\n${printBinding (p.bind-keymap)}" else ""}
-    ${if p.mode != "" then ":mode ${p.mode}" else ""}
-    ${if p.interpreter != "" then ":interpreter\n${p.interpreter}" else ""}
-    ${if p.magic != "" then ":magic\n${p.magic}" else ""}
-    ${if p.magic-fallback != "" then ":magic-fallback\n${p.magic-fallback}" else ""}
-    ${if p.hook != "" then ":hook\n${p.hook}" else ""}
-    ${if p.custom != {} then ":custom\n${printCustom p.custom}" else ""}
-    ${if p.custom-face != {} then ":custom-face\n${printCustom p.custom-face}" else ""}
-    ${if p.demand then ":demand t" else ""}
-    ${if p.if-keyword != "" then ":if\n${p.if-keyword}" else ""}
-    ${if p.when != "" then ":when\n${p.when}" else ""}
-    ${if p.unless != "" then ":unless\n${p.unless}" else ""}
-    ${if p.after != [] then ":after (${builtins.concatStringsSep " " p.after})" else ""}
-    ${if p.defines != "" then ":defines\n${p.defines}" else ""}
-    ${if p.functions != "" then ":functions\n${p.functions}" else ""}
-    ${if p.diminish != null then ":diminish\n${p.diminish}" else ""}
-    ${if p.delight != null then ":delight\n${p.delight}" else ""} 
-    ${if p.chords != {} then ":chords\n${printBinding p.chords}" else ""}
-    )
-  '';
-
+  packageToConfig = p:
+    removeNonEmptyLines ''
+      (use-package ${p.name}
+      ${
+        if p.defer
+        then ":defer t"
+        else ""
+      }
+      ${
+        if p.init != ""
+        then ":init\n${p.init}"
+        else ""
+      }
+      ${
+        if p.config != ""
+        then ":config\n${p.config}"
+        else ""
+      }
+      ${
+        if p.commands != []
+        then ":commands (${builtins.concatStringsSep " " p.commands})"
+        else ""
+      }
+      ${
+        if p.bind != {}
+        then ":bind\n${printBinding (p.bind)}"
+        else ""
+      }
+      ${
+        if p.bind-keymap != {}
+        then ":bind-keymap\n${printBinding (p.bind-keymap)}"
+        else ""
+      }
+      ${
+        if p.mode != ""
+        then ":mode ${p.mode}"
+        else ""
+      }
+      ${
+        if p.interpreter != ""
+        then ":interpreter\n${p.interpreter}"
+        else ""
+      }
+      ${
+        if p.magic != ""
+        then ":magic\n${p.magic}"
+        else ""
+      }
+      ${
+        if p.magic-fallback != ""
+        then ":magic-fallback\n${p.magic-fallback}"
+        else ""
+      }
+      ${
+        if p.hook != ""
+        then ":hook\n${p.hook}"
+        else ""
+      }
+      ${
+        if p.custom != {}
+        then ":custom\n${printCustom p.custom}"
+        else ""
+      }
+      ${
+        if p.custom-face != {}
+        then ":custom-face\n${printCustom p.custom-face}"
+        else ""
+      }
+      ${
+        if p.demand
+        then ":demand t"
+        else ""
+      }
+      ${
+        if p.if-keyword != ""
+        then ":if\n${p.if-keyword}"
+        else ""
+      }
+      ${
+        if p.when != ""
+        then ":when\n${p.when}"
+        else ""
+      }
+      ${
+        if p.unless != ""
+        then ":unless\n${p.unless}"
+        else ""
+      }
+      ${
+        if p.after != []
+        then ":after (${builtins.concatStringsSep " " p.after})"
+        else ""
+      }
+      ${
+        if p.defines != ""
+        then ":defines\n${p.defines}"
+        else ""
+      }
+      ${
+        if p.functions != ""
+        then ":functions\n${p.functions}"
+        else ""
+      }
+      ${
+        if p.diminish != null
+        then ":diminish\n${p.diminish}"
+        else ""
+      }
+      ${
+        if p.delight != null
+        then ":delight\n${p.delight}"
+        else ""
+      }
+      ${
+        if p.chords != {}
+        then ":chords\n${printBinding p.chords}"
+        else ""
+      }
+      )
+    '';
 
   comparator = fst: snd: fst.priority < snd.priority || (fst.priority == snd.priority && fst.name < snd.name);
 
   packages = attrValues config.package;
   useDiminish = any (x: x.diminish != null) packages;
   useDelight = any (x: x.delight != null) packages;
-  useChords = any (x: x.chords != { }) packages;
-in
-{
+  useChords = any (x: x.chords != {}) packages;
+in {
   options = {
     package = mkOption {
-      default = { };
-      type = with types; submodule {
-        freeformType = attrsOf (submodule packageOpts);
-      };
+      default = {};
+      type = with types;
+        submodule {
+          freeformType = attrsOf (submodule packageOpts);
+        };
       description = ''
         Package setup organised by package name.
       '';
@@ -294,7 +394,12 @@ in
   };
 
   config = {
-    rawPackageList = builtins.concatMap (p: if builtins.isList p.package then p.package else singleton p.package) (filter (p: p.enable) (builtins.attrValues (config.package))) ++ singleton epkgs.use-package;
+    rawPackageList =
+      builtins.concatMap (p:
+        if builtins.isList p.package
+        then p.package
+        else singleton p.package) (filter (p: p.enable) (builtins.attrValues (config.package)))
+      ++ singleton epkgs.use-package;
 
     package = {
       use-package-chords = {

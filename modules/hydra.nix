@@ -1,10 +1,15 @@
-{ config, lib, ... }:
-
-with lib;
-
-let
+{
+  config,
+  lib,
+  ...
+}:
+with lib; let
   cfg = config.hydra;
-  hydraType = { name, config, ... }: {
+  hydraType = {
+    name,
+    config,
+    ...
+  }: {
     options = {
       name = mkOption {
         type = types.str;
@@ -64,9 +69,12 @@ let
             name = "out";
           };
         };
-        apply = mapAttrs (name: value: if isString value then {
-          command-text = ''("${name}" ${value})'';
-        } else value);
+        apply = mapAttrs (name: value:
+          if isString value
+          then {
+            command-text = ''("${name}" ${value})'';
+          }
+          else value);
         description = ''
           Bindings for this hydra.
         '';
@@ -81,15 +89,27 @@ let
 
     config = {
       hydra-text = ''
-        (defhydra ${config.name} (${config.bind} ${if config.colour != null then ":color ${config.colour}" else ""} ${if config.hint != null then ":hint ${config.hint}" else ""})
+        (defhydra ${config.name} (${config.bind} ${
+          if config.colour != null
+          then ":color ${config.colour}"
+          else ""
+        } ${
+          if config.hint != null
+          then ":hint ${config.hint}"
+          else ""
+        })
         "${config.docText}"
         ${concatStringsSep "\n" (map (x: x.command-text) (attrValues config.bindings))}
         )
-    '';
+      '';
     };
   };
 
-  hydraBind = { name, config, ... }: {
+  hydraBind = {
+    name,
+    config,
+    ...
+  }: {
     options = {
       keybind = mkOption {
         type = types.str;
@@ -131,12 +151,19 @@ let
 
     config = {
       command-text = ''
-        ("${config.keybind}" ${config.command} ${if config.name != null then "\"${config.name}\"" else ""} ${if config.colour != null then ":color ${config.colour}" else ""})
+        ("${config.keybind}" ${config.command} ${
+          if config.name != null
+          then "\"${config.name}\""
+          else ""
+        } ${
+          if config.colour != null
+          then ":color ${config.colour}"
+          else ""
+        })
       '';
     };
   };
-in
-{
+in {
   options = {
     hydra = mkOption {
       type = with types; attrsOf (submodule hydraType);

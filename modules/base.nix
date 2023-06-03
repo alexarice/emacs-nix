@@ -1,14 +1,17 @@
-{ config, lib, epkgs, pkgs, hmConfig, ... }:
-
-with lib;
-
-let
+{
+  config,
+  lib,
+  epkgs,
+  pkgs,
+  hmConfig,
+  ...
+}:
+with lib; let
   userConfig = epkgs.trivialBuild {
     pname = "default";
     src = pkgs.writeText "default.el" config.configFile;
   };
-in
-{
+in {
   options = {
     preamble = mkOption {
       type = types.separatedString "\n\n";

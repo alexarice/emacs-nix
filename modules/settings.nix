@@ -1,12 +1,13 @@
-{ config, lib, ... }:
-
-with lib;
-
 {
+  config,
+  lib,
+  ...
+}:
+with lib; {
   options = {
     global-variables = mkOption {
       type = types.varBindType;
-      default = { };
+      default = {};
       description = ''
         Variables to be set in <filename>init.el</filename>.
       '';
@@ -14,7 +15,7 @@ with lib;
 
     global-modes = mkOption {
       type = types.attrsOf types.bool;
-      default = { };
+      default = {};
       description = ''
         Modes to enable/disable on startup.
       '';
@@ -24,6 +25,11 @@ with lib;
   config.preamble = mkAfter ''
     ${printVariables config.global-variables}
 
-    ${concatStringsSep "\n" (mapAttrsToList (name: value: "(${name} ${if value then "1" else "-1"})") config.global-modes) }
+    ${concatStringsSep "\n" (mapAttrsToList (name: value: "(${name} ${
+        if value
+        then "1"
+        else "-1"
+      })")
+      config.global-modes)}
   '';
 }
