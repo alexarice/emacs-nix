@@ -20,10 +20,20 @@ with lib; {
         Modes to enable/disable on startup.
       '';
     };
+
+    environment = mkOption {
+      type = types.attrsOf types.lispVarType;
+      default = {};
+      description = ''
+        Environment variables to set.
+      '';
+    };
   };
 
   config.preamble = mkAfter ''
     ${printVariables config.global-variables}
+
+    ${concatStringsSep "\n" (mapAttrsToList (name: value: "(setenv \"${name}\" ${printLispVar value})") config.environment)}
 
     ${concatStringsSep "\n" (mapAttrsToList (name: value: "(${name} ${
         if value
