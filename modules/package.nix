@@ -247,11 +247,6 @@ with lib; let
 
   removeNonEmptyLines = s: builtins.concatStringsSep "\n" (builtins.filter (l: l != "") (splitString "\n" s));
 
-  concatLines = s:
-    if builtins.isList s
-    then builtins.concatStringsSep "\n" s
-    else s;
-
   packageToConfig = p:
     removeNonEmptyLines ''
       (use-package ${p.name}
