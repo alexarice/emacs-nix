@@ -9,13 +9,15 @@ with lib; let
   ts = epkgs.treesit-grammars;
 in {
   options = {
-    tree-sitter = mkEnableOption "tree-sitter";
-    grammars = mkOption {
-      type = with types; nullOr (functionTo (listOf package));
-      default = null;
-      description = ''
-        Grammars to include (include all grammars when null)
-      '';
+    tree-sitter = {
+      enable = mkEnableOption "tree-sitter";
+      grammars = mkOption {
+        type = with types; nullOr (functionTo (listOf package));
+        default = null;
+        description = ''
+          Grammars to include (include all grammars when null)
+        '';
+      };
     };
   };
 
