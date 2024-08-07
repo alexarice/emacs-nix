@@ -20,6 +20,7 @@ with lib; let
       ./modules/keymap.nix
       ./modules/hydra.nix
       ./modules/package.nix
+      ./modules/tree-sitter.nix
       ./modules/settings.nix
     ];
   };
