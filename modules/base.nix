@@ -36,7 +36,7 @@ with lib; {
     rawPackageList = mkOption {
       type = types.listOf types.package;
       visible = false;
-      readOnly = true;
+      readOnly = false;
     };
 
     externalPackageList = mkOption {
