@@ -10,5 +10,5 @@ in rec {
   types = oldLib.types // (callLib ./types.nix);
   printers = callLib ./printers.nix;
 
-  inherit (printers) printLispVar printCustom printVariables printBinding printBind;
+  inherit (printers) printLispVar printCustom printVariables printDefaultVariables printBinding printBind;
 })
