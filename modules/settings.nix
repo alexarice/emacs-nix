@@ -9,7 +9,15 @@ with lib; {
       type = types.varBindType;
       default = {};
       description = ''
-        Variables to be set in <filename>init.el</filename>.
+        Variables to be set.
+      '';
+    };
+
+    global-variable-defaults = mkOption {
+      type = types.varBindType;
+      default = {};
+      description = ''
+        Set defaults for buffer-local variables.
       '';
     };
 
@@ -31,6 +39,7 @@ with lib; {
   };
 
   config.preamble = mkAfter ''
+    ${printVariables config.global-variables}
     ${printVariables config.global-variables}
 
     ${concatStringsSep "\n" (mapAttrsToList (name: value: "(setenv \"${name}\" ${printLispVar value})") config.environment)}

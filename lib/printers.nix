@@ -22,6 +22,10 @@ in {
   printVariables = c:
     concatStringsSep "\n" (mapAttrsToList (name: value: "(setq ${name} ${printLispVar value})") c);
 
+  # Print a varBindType to a list of (setq-default x y)
+  printDefaultVariables = c:
+    concatStringsSep "\n" (mapAttrsToList (name: value: "(setq-default ${name} ${printLispVar value})") c);
+
   # Print a map for bind key
   printBind = x: item: ''
     :map ${x}
