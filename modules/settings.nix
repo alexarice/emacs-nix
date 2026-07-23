@@ -40,7 +40,7 @@ with lib; {
 
   config.preamble = mkAfter ''
     ${printVariables config.global-variables}
-    ${printVariables config.global-variables}
+    ${printDefaultVariables config.global-variable-defaults}
 
     ${concatStringsSep "\n" (mapAttrsToList (name: value: "(setenv \"${name}\" ${printLispVar value})") config.environment)}
 
